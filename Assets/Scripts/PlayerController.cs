@@ -41,6 +41,12 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = Vector3.zero;
         }
+
+        if (hasPowerup)
+        {
+            powerUpIndicator.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+            powerUpIndicator.transform.rotation = Quaternion.identity; // keep the indicator upright
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -49,7 +55,17 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerup = true;
             Destroy(other.gameObject);
+            StartCoroutine(PowerupCooldown());
         }
+    }
+
+    IEnumerator PowerupCooldown()
+    {
+        powerUpIndicator.SetActive(true);
+        yield return new WaitForSeconds(10f);
+        hasPowerup = false;
+        Debug.Log("Powerup has ended");
+        powerUpIndicator.SetActive(false);
     }
 
     void OnCollisionEnter(Collision other)

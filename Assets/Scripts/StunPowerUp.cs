@@ -19,7 +19,6 @@ public class StunPowerUp : MonoBehaviour
 
                 }
             }
-            
             Destroy(gameObject);
         }
     }

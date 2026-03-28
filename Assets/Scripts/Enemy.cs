@@ -19,11 +19,18 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (transform.position.y < -10f)
+        {
+            Destroy(gameObject);
+        }
+        
         if (isStunned) return;
         
         Vector3 dir = player.transform.position - transform.position;
         dir.Normalize();
         rb.AddForce(dir * speed);
+        
+        
     }
 
     public IEnumerator StunRoutine(float duration)

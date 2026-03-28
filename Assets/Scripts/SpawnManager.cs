@@ -6,11 +6,22 @@ public class SpawnManager : MonoBehaviour
     public Transform[] spawnPoints;
     public GameObject enemyPrefab;
 
+    private Coroutine byeRoutines;
+
     void Start()
     {
         //InvokeRepeating(nameof(RandomSpawn), 0, 3);
-        StartCoroutine(Bye());
+        //byeRoutines = StartCoroutine(Bye());
+        StartCoroutine(SpawnRoutine());
+    }
 
+    IEnumerator SpawnRoutine()
+    {
+        while (true)
+        {
+            RandomSpawn();
+            yield return new WaitForSeconds(3);
+        }
     }
     
     void RandomSpawn()
@@ -47,7 +58,21 @@ public class SpawnManager : MonoBehaviour
             StartCoroutine(Hello(4));
             yield return new WaitForSeconds(1f);
 
+            // if (Time.time > 5)
+            // {
+            //     yield break;
+            // }
+
         }
+    }
+
+    void Update()
+    {
+        // if (Time.time > 3)
+        // {
+        //     //StopAllCoroutines();
+        //     StopCoroutine(byeRoutines);
+        // }
     }
 
 }

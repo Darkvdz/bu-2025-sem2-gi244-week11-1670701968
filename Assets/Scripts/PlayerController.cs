@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,12 +7,17 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
     public Transform focalPoint;
+    
+    public bool hasPowerUp;
 
     private Rigidbody rb;
 
     private InputAction moveAction;
     private InputAction smashAction;
     private InputAction breakAction;
+    
+    private Coroutine powerUpCoroutine;
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,6 +27,7 @@ public class PlayerController : MonoBehaviour
         moveAction = InputSystem.actions.FindAction("Move");
         smashAction = InputSystem.actions.FindAction("Smash");
         breakAction = InputSystem.actions.FindAction("Break");
+        
     }
 
     // Update is called once per frame
@@ -34,5 +41,45 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
         }
 
+    }
+
+    IEnumerator PowerUpCooldown()
+    {
+        yield return new WaitForSeconds(10f);
+        hasPowerUp = false;
+    }
+
+    private void OnCollisionEnter(Collision colision)
+    {
+        if (colision.gameObject.CompareTag("Enemy"))
+        {
+            if (hasPowerUp)
+            {
+                var enemyRb =  colision.gameObject.GetComponent<Rigidbody>();
+                // var v = enemyRb.linearVelocity;
+                // v.Normalize();
+                //
+                //var v = enemyRb.linearVelocity.normalized;
+               
+                var dir = enemyRb.transform.position - transform.position;
+                dir.Normalize();
+                enemyRb.AddForce(dir * 10f ,ForceMode.Impulse);
+            }
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PowerUp"))
+        {
+            hasPowerUp = true;
+            Destroy(other.gameObject);
+            if (powerUpCoroutine != null)
+            {
+                StopCoroutine(powerUpCoroutine);
+            }
+            powerUpCoroutine = StartCoroutine(PowerUpCooldown());
+        }
+        
     }
 }

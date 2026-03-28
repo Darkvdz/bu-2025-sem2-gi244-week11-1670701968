@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -7,7 +8,46 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
+        //InvokeRepeating(nameof(RandomSpawn), 0, 3);
+        StartCoroutine(Bye());
 
+    }
+    
+    void RandomSpawn()
+    {
+        var index = Random.Range(0, spawnPoints.Length);
+        var spawnPoint = spawnPoints[index];
+        
+        Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+    }
+
+    IEnumerator Hello(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        Debug.Log("Hello" + Time.frameCount);
+        Debug.Log("Hello" + Time.frameCount);
+        Debug.Log("Hello" + Time.frameCount);
+        yield return null;
+        Debug.Log("Hello" + Time.frameCount);
+        yield return null;
+        yield return null;
+        Debug.Log("Hello" + Time.frameCount);
+
+    }
+
+    IEnumerator Bye()
+    {
+        while (true)
+        {
+            Debug.Log("Bye" + Time.frameCount + " " + Time.time);
+            yield return new WaitForSeconds(1f);
+            //yield return null;
+
+            StartCoroutine(Hello(4));
+            yield return new WaitForSeconds(1f);
+
+        }
     }
 
 }

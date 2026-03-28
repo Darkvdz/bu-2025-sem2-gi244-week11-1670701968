@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
+    public Transform focalPoint;
 
     private Rigidbody rb;
 
@@ -25,6 +26,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var move = moveAction.ReadValue<Vector2>();
+        rb.AddForce(move.y * speed * focalPoint.forward);
+
+        if (breakAction.IsPressed())
+        {
+            rb.linearVelocity = Vector3.zero;
+        }
 
     }
 }

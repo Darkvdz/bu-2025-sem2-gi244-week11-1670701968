@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     
     private Coroutine powerUpCoroutine;
     
+    public GameObject powerupIndicator;
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,6 +29,8 @@ public class PlayerController : MonoBehaviour
         moveAction = InputSystem.actions.FindAction("Move");
         smashAction = InputSystem.actions.FindAction("Smash");
         breakAction = InputSystem.actions.FindAction("Break");
+        
+        powerupIndicator.SetActive(false);
         
     }
 
@@ -40,6 +44,8 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = Vector3.zero;
         }
+        
+        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0);
 
     }
 
@@ -47,6 +53,8 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(10f);
         hasPowerUp = false;
+        
+        powerupIndicator.SetActive(false);
     }
 
     private void OnCollisionEnter(Collision colision)
@@ -74,6 +82,10 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerUp = true;
             Destroy(other.gameObject);
+            
+            print("tesss");
+            powerupIndicator.SetActive(true);
+            
             if (powerUpCoroutine != null)
             {
                 StopCoroutine(powerUpCoroutine);
